@@ -5,6 +5,8 @@ from collections.abc import Mapping
 from dataclasses import dataclass
 from pathlib import Path
 
+from dotenv import dotenv_values, load_dotenv
+
 
 class DatasetNotFoundError(FileNotFoundError):
     pass
@@ -49,22 +51,31 @@ def resolve_data_dir(
     cwd: Path | None = None,
 ) -> Path:
     current_dir = cwd or Path.cwd()
-    environment = env or os.environ
+    environment = os.environ if env is None else env
+    dotenv_path = current_dir / ".env"
+    dotenv_config = dotenv_values(dotenv_path)
+    if env is None:
+        load_dotenv(dotenv_path=dotenv_path, override=False)
 
     candidates: list[Path] = []
     if data_dir is not None:
         candidates.append(_resolve_candidate(data_dir, current_dir))
-    else:
-        env_value = environment.get("STATSBOMB_DATA_DIR")
-        if env_value:
-            candidates.append(_resolve_candidate(env_value, current_dir))
 
-        candidates.extend(
-            [
-                _resolve_candidate("../open-data/data", current_dir),
-                _resolve_candidate("../statsbomb-open-data/data", current_dir),
-            ]
-        )
+    env_value = environment.get("STATSBOMB_DATA_DIR")
+    if env_value:
+        candidates.append(_resolve_candidate(env_value, current_dir))
+
+    dotenv_value = dotenv_config.get("STATSBOMB_DATA_DIR")
+    if dotenv_value:
+        candidates.append(_resolve_candidate(dotenv_value, current_dir))
+
+    candidates.extend(
+        [
+            _resolve_candidate("data/statsbomb-open-data/data", current_dir),
+            _resolve_candidate("../open-data/data", current_dir),
+            _resolve_candidate("../statsbomb-open-data/data", current_dir),
+        ]
+    )
 
     for candidate in candidates:
         if candidate.is_dir() and (candidate / "competitions.json").is_file():
