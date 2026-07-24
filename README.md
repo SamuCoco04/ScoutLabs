@@ -11,7 +11,8 @@ El proyecto incluye una aplicación Python tipada que localiza el dataset de Sta
 - Python 3.11 o superior.
 - `pytest` para pruebas.
 - `ruff` para linting y formato.
-- StatsBomb Open Data disponible como repositorio hermano o mediante `STATSBOMB_DATA_DIR`.
+- StatsBomb Open Data disponible dentro de `data/statsbomb-open-data/data`, como
+  repositorio hermano o mediante `STATSBOMB_DATA_DIR`.
 
 ## Estructura
 
@@ -47,7 +48,8 @@ git clone https://github.com/statsbomb/open-data.git open-data
 cd ScoutLabs
 ```
 
-ScoutLabs espera por defecto `../open-data/data` y, como respaldo, `../statsbomb-open-data/data`.
+ScoutLabs busca por defecto primero `data/statsbomb-open-data/data`; después prueba
+`../open-data/data` y `../statsbomb-open-data/data`.
 
 ## Entorno virtual
 
@@ -84,7 +86,7 @@ cp .env.example .env
 Contenido esperado:
 
 ```ini
-STATSBOMB_DATA_DIR=../open-data/data
+STATSBOMB_DATA_DIR=data/statsbomb-open-data/data
 ```
 
 `.env` está ignorado por Git.
@@ -107,9 +109,17 @@ scoutlabs inventory
 scoutlabs inventory --data-dir ../open-data/data --output-dir reports --format all
 ```
 
-Opciones admitidas:
+La ruta del dataset se resuelve en este orden:
 
-- `--data-dir` tiene prioridad sobre `STATSBOMB_DATA_DIR`.
+1. El argumento `--data-dir`.
+2. La variable de entorno ya definida `STATSBOMB_DATA_DIR`.
+3. El valor `STATSBOMB_DATA_DIR` leído de `.env`, sin sobrescribir el entorno.
+4. `data/statsbomb-open-data/data`.
+5. `../open-data/data`.
+6. `../statsbomb-open-data/data`.
+
+Otras opciones admitidas:
+
 - `--output-dir` define dónde escribir los reportes.
 - `--format` admite `json`, `csv`, `markdown` y `all`.
 

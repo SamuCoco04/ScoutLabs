@@ -3,7 +3,7 @@ from __future__ import annotations
 import csv
 import json
 from dataclasses import asdict, dataclass
-from datetime import date, datetime
+from datetime import UTC, date, datetime
 from pathlib import Path
 from typing import Any
 
@@ -46,7 +46,7 @@ def _read_json_file(path: Path) -> Any:
 
 
 def _coerce_int(value: Any) -> int | None:
-    if isinstance(value, int):
+    if isinstance(value, int) and not isinstance(value, bool):
         return value
     return None
 
@@ -164,12 +164,12 @@ def build_inventory(dataset_paths: DatasetPaths) -> InventoryResult:
         competition_gender = _coerce_str(competition.get("competition_gender"))
 
         match_file = dataset_paths.matches_dir / str(competition_id) / f"{season_id}.json"
-        matches: list[dict[str, Any]] = []
+        matches: list[Any] = []
         if match_file.is_file():
             try:
                 match_payload = _read_json_file(match_file)
                 if isinstance(match_payload, list):
-                    matches = [item for item in match_payload if isinstance(item, dict)]
+                    matches = match_payload
                 else:
                     warnings.append(f"{match_file}: se esperaba una lista de partidos.")
             except json.JSONDecodeError:
@@ -184,15 +184,18 @@ def build_inventory(dataset_paths: DatasetPaths) -> InventoryResult:
         lineup_file_count = 0
         three_sixty_file_count = 0
 
-        for match in matches:
-            match_id = _coerce_int(match.get("match_id"))
+        valid_match_count = 0
+        for match_index, match in enumerate(matches):
+            match_id = _coerce_int(match.get("match_id")) if isinstance(match, dict) else None
             if match_id is None:
                 warnings.append(
-                    f"{match_file}: se omitió un partido sin match_id en "
+                    f"{match_file}: se omitió el registro de partido {match_index} "
+                    f"sin match_id entero en "
                     f"{competition_name} / {season_name}."
                 )
                 continue
 
+            valid_match_count += 1
             global_match_count += 1
 
             match_date = _parse_match_date(
@@ -201,7 +204,9 @@ def build_inventory(dataset_paths: DatasetPaths) -> InventoryResult:
             if match_date is not None:
                 match_dates.append(match_date)
 
-            team_ids.update(_extract_unique_team_ids(match))
+            match_team_ids = _extract_unique_team_ids(match)
+            team_ids.update(match_team_ids)
+            global_team_ids.update(match_team_ids)
 
             event_path = _match_file(dataset_paths.events_dir, match_id)
             lineup_path = _match_file(dataset_paths.lineups_dir, match_id)
@@ -238,7 +243,7 @@ def build_inventory(dataset_paths: DatasetPaths) -> InventoryResult:
 
         first_match_date = min(match_dates).isoformat() if match_dates else None
         last_match_date = max(match_dates).isoformat() if match_dates else None
-        match_count = len(matches)
+        match_count = valid_match_count
 
         rows.append(
             InventoryRow(
@@ -284,7 +289,7 @@ def build_inventory(dataset_paths: DatasetPaths) -> InventoryResult:
 
     return InventoryResult(
         dataset_root=str(dataset_paths.root),
-        generated_at=datetime.utcnow().replace(microsecond=0).isoformat() + "Z",
+        generated_at=datetime.now(UTC).replace(microsecond=0).isoformat().replace("+00:00", "Z"),
         summary=summary,
         rows=rows,
         warnings=warnings,
