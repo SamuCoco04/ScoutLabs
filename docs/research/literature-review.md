@@ -39,8 +39,8 @@ bibliography; citations below use the same primary sources and recommendation ID
 StatsBomb events provide ordered, possession-aware observations with conditional
 event-specific objects and relationships. They are a strong basis for direct metrics,
 sequencing, and spatial action summaries, but they are not a continuous description of
-all players or the ball. The official [event specification](../../data/statsbomb-open-data/doc/Open%20Data%20Events%20v4.0.0.pdf)
-and [data specification](../../data/statsbomb-open-data/doc/StatsBomb%20Open%20Data%20Specification%20v1.1.pdf)
+all players or the ball. The official [event specification](https://github.com/hudl/open-data/blob/master/doc/Open%20Data%20Events%20v4.0.0.pdf)
+and [data specification](https://github.com/hudl/open-data/blob/master/doc/StatsBomb%20Open%20Data%20Specification%20v1.1.pdf)
 govern field semantics; the local audit governs observed availability. This distinction
 supports `R2`, `R9`, and the evidence policy in
 [research methodology](research-methodology.md#3-evidence-hierarchy).
@@ -133,7 +133,7 @@ They do not support a generic average position or tracking heatmap. `EXP-SPATIAL
 and `EXP-SPATIAL-002` evaluate whether histograms and transitions add stable information
 beyond direct metrics.
 
-The official [360 specification](../../data/statsbomb-open-data/doc/Open%20Data%20360%20Frames%20v1.0.0%20%281%29.pdf)
+The official [360 specification](https://github.com/hudl/open-data/blob/master/doc/Open%20Data%20360%20Frames%20v1.0.0%20%281%29.pdf)
 documents event-linked visible players and polygons. Only visible players are
 represented; non-actor identities are absent; polygons and flags can be incomplete.
 `EXP-360-001` defines usable-frame criteria before `EXP-360-002` tests nearest-visible
