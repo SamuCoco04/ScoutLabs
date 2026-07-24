@@ -1,0 +1,18 @@
+[
+  {
+    "competition_id": 1,
+    "season_id": 10,
+    "country_name": "Country A",
+    "competition_name": "Alpha League",
+    "competition_gender": "male",
+    "season_name": "2024"
+  },
+  {
+    "competition_id": 2,
+    "season_id": 20,
+    "country_name": "Country B",
+    "competition_name": "Beta Cup",
+    "competition_gender": "female",
+    "season_name": "2024/2025"
+  }
+]

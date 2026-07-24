@@ -1,0 +1,18 @@
+[
+  {
+    "team_id": 11,
+    "team_name": "Team One",
+    "lineup": [
+      {"player_id": 501, "player_name": "Player A"},
+      {"player_id": 502, "player_name": "Player B"},
+      {"player_id": 501, "player_name": "Player A"}
+    ]
+  },
+  {
+    "team_id": 22,
+    "team_name": "Team Two",
+    "lineup": [
+      {"player_id": 503, "player_name": "Player C"}
+    ]
+  }
+]

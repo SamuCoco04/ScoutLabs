@@ -1,0 +1,17 @@
+[
+  {
+    "team_id": 11,
+    "team_name": "Team One",
+    "lineup": [
+      {"player_id": 501, "player_name": "Player A"},
+      {"player_id": 504, "player_name": "Player D"}
+    ]
+  },
+  {
+    "team_id": 33,
+    "team_name": "Team Three",
+    "lineup": [
+      {"player_id": 505, "player_name": "Player E"}
+    ]
+  }
+]
