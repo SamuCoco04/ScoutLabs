@@ -149,6 +149,14 @@ python -m ruff check .
 python -m ruff format --check .
 ```
 
+## Documentation
+
+- [Product brief](BRIEF.md)
+- [Data documentation](docs/data/README.md)
+- [Research documentation](docs/research/README.md)
+- [Reviewed research dossier](docs/research/research-dossier.md)
+- [Metrics and model documentation](docs/metrics/README.md)
+
 ## Qué no incluye todavía
 
 - Frontend.
